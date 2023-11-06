@@ -1,5 +1,7 @@
-import { Router, Request, Response, query } from "express";
+import { Router, Request, Response } from "express";
 import axios from "axios";
+import sleep from "./functions/sleep";
+
 
 const router = Router();
 
@@ -25,8 +27,9 @@ router.get("/search", async (req: Request, res: Response) => {
 });
 
 router.get("/search-array", async (req: Request, res: Response) => {
-	async function fetchData(query) {
+	async function fetchData(query, requestIndex) {
 		try {
+			await sleep(80 * requestIndex); // delay needed for avoiding a scryfall ban according to the api docs
 			const response = await axios.get(
 				`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(query)}`
 			);
@@ -47,12 +50,15 @@ router.get("/search-array", async (req: Request, res: Response) => {
 	try {
 		let { cardNames } = req.query as { cardNames: string };
 		const cardNameArray = cardNames.split(",");
+		console.log(cardNames)
 
 		if (!cardNameArray || !Array.isArray(cardNameArray)) {
 			return res.status(400).json({ error: "You must provide an array of strings" });
 		}
 
-		const axiosResponses = await Promise.allSettled(cardNameArray.map((query) => fetchData(query)));
+		const axiosResponses = await Promise.allSettled(
+			cardNameArray.map((query, idx) => fetchData(query, idx))
+		);
 
 		const flattenedResponse = axiosResponses
 			.filter((res) => res.status === "fulfilled")
