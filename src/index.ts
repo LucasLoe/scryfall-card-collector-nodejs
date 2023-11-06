@@ -12,7 +12,7 @@ const port = process.env.PORT || 8000;
 
 app.use(
 	cors({
-		origin: ["http://localhost:5173", "https://scryfall-card-collector-frontend.vercel.app/"],
+		origin: ["http://localhost:5173", "https://scryfall-card-collector-frontend.vercel.app"],
 	})
 );
 
