@@ -10,6 +10,8 @@ dotenv.config();
 const app: Application = express();
 const port = process.env.PORT || 8000;
 
+const whitelist = ["http://localhost:5173", "https://scryfall-card-collector-frontend.vercel.app"]
+
 app.use(
 	cors({
 		origin: ["http://localhost:5173", "https://scryfall-card-collector-frontend.vercel.app"],

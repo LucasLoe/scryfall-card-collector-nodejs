@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express";
 import axios from "axios";
 import sleep from "./functions/sleep";
 
-
 const router = Router();
 
 router.get("/search", async (req: Request, res: Response) => {
@@ -48,9 +47,10 @@ router.get("/search-array", async (req: Request, res: Response) => {
 	}
 
 	try {
+		console.log(req.query);
 		let { cardNames } = req.query as { cardNames: string };
 		const cardNameArray = cardNames.split(",");
-		console.log(cardNames)
+		console.log(cardNames);
 
 		if (!cardNameArray || !Array.isArray(cardNameArray)) {
 			return res.status(400).json({ error: "You must provide an array of strings" });
@@ -63,7 +63,6 @@ router.get("/search-array", async (req: Request, res: Response) => {
 		const flattenedResponse = axiosResponses
 			.filter((res) => res.status === "fulfilled")
 			.map((res) => res.status === "fulfilled" && res.value);
-		console.log(axiosResponses);
 
 		const fetchedCards = flattenedResponse
 			.filter((res) => res.success)
